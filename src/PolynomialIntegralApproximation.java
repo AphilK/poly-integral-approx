@@ -3,7 +3,7 @@ import java.text.DecimalFormat;
 import java.util.InputMismatchException;
 import java.util.ArrayList;
 
-public class App {
+public class PolynomialIntegralApproximation {
     // DecimalFormat to format floating-point numbers to 10 decimal places
     static DecimalFormat df = new DecimalFormat("0.0000000000");
 
@@ -83,6 +83,23 @@ public class App {
                         }
                     } while(t < x.getFirst() || t > x.getLast());
 
+                    System.out.println("Calculating the lagrange polynomial...");
+                    System.out.println("The result is: " + df.format(lagrange(x, y, t)));
+
+                    System.out.println("Do you want to go back to the menu? (y - yes, n - no)");
+
+                    try {
+                        String backToMenuOption = scanner.nextLine();
+                        if (backToMenuOption.equalsIgnoreCase("n")) {
+                            System.out.println("Exiting...");
+                            continueProgram = false;
+                        } else if (!backToMenuOption.equalsIgnoreCase("y")) {
+                            System.out.println("Invalid option. Returning to the menu.");
+                        }
+                    } catch (InputMismatchException e) {
+                        System.out.println("Invalid input. Returning to the menu.");
+                        scanner.nextInt(); // Clear the invalid input
+                    }
                     break;
 
                     case 4:
@@ -105,7 +122,23 @@ public class App {
     }
 
     public static double lagrange(ArrayList<Double> x, ArrayList<Double> y, double t){
-        //To implement...
-        return 0;
+        double result = 0.0;
+        int n = x.size();
+
+        System.out.println("Lagrange table:");
+        System.out.println("i\t\tXi\t\tYi\t\tLi\t\tYi * Li");
+
+        for (int i = 0; i < n; i++) {
+            double li = 1.0;
+            for (int j = 0; j < n; j++) {
+                if (j != i) {
+                    li *= (t - x.get(j)) / (x.get(i) - x.get(j));
+                }
+            }
+            System.out.println((i+1) + "\t\t" + df.format(x.get(i)) + "\t\t" + df.format(y.get(i)) + "\t\t" + df.format(li) + "\t\t" + df.format(y.get(i) * li));
+            result += li * y.get(i);
+        }
+
+        return result;
     }
 }
